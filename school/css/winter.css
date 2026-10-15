@@ -1,0 +1,327 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: calc(10vh + 60px) 16px 24px; /* miesto pre fixný navbar */
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: #fff;
+  background: linear-gradient(160deg, #0b1d3a 0%, #14365f 55%, #1d4d4f 100%);
+  overflow-x: hidden;
+}
+
+h1 {
+  font-size: clamp(1.6rem, 5vw, 3rem);
+  text-align: center;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  opacity: .75;
+  margin-bottom: 36px;
+  text-align: center;
+  font-size: clamp(.9rem, 2.5vw, 1.1rem);
+}
+
+.countdown {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 16px;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.box {
+  background: rgba(255, 255, 255, .08);
+  border: 1px solid rgba(255, 255, 255, .15);
+  border-radius: 16px;
+  padding: 22px 10px;
+  text-align: center;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
+}
+
+.box .value {
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #ffd86b;
+  line-height: 1.1;
+}
+
+.box .label {
+  margin-top: 8px;
+  font-size: .85rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: .8;
+}
+
+.message {
+  display: none;
+  font-size: clamp(2rem, 8vw, 4rem);
+  text-align: center;
+  color: #ffd86b;
+  font-weight: 700;
+}
+
+.target {
+  margin-top: 32px;
+  opacity: .6;
+  font-size: .9rem;
+}
+
+/* padajúci sneh */
+.snow {
+  position: fixed;
+  top: -10px;
+  color: #fff;
+  pointer-events: none;
+  user-select: none;
+  animation: fall linear forwards;
+  z-index: 0;
+}
+
+@keyframes fall {
+  to { transform: translateY(105vh) translateX(40px); }
+}
+
+h1, .subtitle, .countdown, .message, .target {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- NAVBAR ---------- */
+
+nav {
+  all: unset;
+  box-sizing: border-box;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  z-index: 1000;
+
+  min-height: 10vh;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  overflow: hidden;              /* nič nevyčnieva z rámu */
+  text-align: center;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: #fff;
+
+  background: rgba(255, 255, 255, .08);
+  border: 1px solid rgba(255, 255, 255, .15);
+  border-radius: 16px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
+}
+
+nav a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: .6rem 1.2rem;
+  border-radius: 12px;
+  text-decoration: none;
+  color: rgba(255, 255, 255, .85);
+  font-size: clamp(1rem, 2.5vw, 1.6rem);
+  background-color: transparent;
+  transition: transform .25s cubic-bezier(.2, .8, .2, 1),
+              color .25s ease,
+              background-color .25s ease;
+}
+
+/* podčiarknutie, ktoré sa rozbehne zo stredu */
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  width: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transform: translateX(-50%);
+  transition: width .3s cubic-bezier(.2, .8, .2, 1);
+}
+
+/* Instagram a Facebook bez podčiarknutia */
+nav #ins::after,
+nav #face::after {
+  display: none;
+}
+
+/* hover: jemný zdvih, odkaz ostáva v ráme */
+nav a:hover,
+nav a:focus-visible {
+  color: #fff;
+  background-color: rgba(255, 255, 255, .1);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+nav a:hover::after,
+nav a:focus-visible::after {
+  width: 55%;
+}
+
+/* klik */
+nav a:active {
+  transform: translateY(0) scale(.97);
+  transition-duration: .1s;
+}
+
+/* prístupnosť: bez animácií pre používateľov, ktorí si to vypli */
+@media (prefers-reduced-motion: reduce) {
+  nav a,
+  nav a::after { transition: none; }
+  nav a:hover,
+  nav a:focus-visible { transform: none; }
+}
+
+.nav-font {
+  font-family: "Jaro", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* farby sociálnych sietí */
+nav #ins:hover,
+nav #ins:focus-visible { color: rgb(218, 91, 155); }
+
+nav #git:hover,
+nav #git:focus-visible { color: #b392f0; }
+
+.fab {
+  font-size: 24px;
+  font-weight: 100;
+}
+nav #git:hover,
+nav #git:focus-visible { color: #b392f0; }
+
+.creator {
+  position: fixed;   /* alebo position: absolute, ak je rodič relatívny */
+  bottom: 0;
+  right: 0;
+  bottom: 10px; 
+  right: 10px;
+  color: rgba(255, 255, 255, .08);
+  text-decoration: none;
+}
+/* ===== Responzívny dizajn ===== */
+
+/* tablety na šírku / menšie notebooky */
+@media (max-width: 1024px) {
+  .countdown {
+    max-width: 800px;
+  }
+}
+
+/* tablety na výšku */
+@media (max-width: 768px) {
+  body {
+    padding: calc(10vh + 90px) 14px 24px; /* menu sa zalamuje, je vyššie */
+  }
+
+  nav {
+    gap: 4px;
+    padding: 8px 10px;
+  }
+  nav a {
+    padding: .4rem .8rem;
+    font-size: 1.1rem;
+  }
+  .fab {
+    font-size: 20px;
+  }
+
+  .subtitle {
+    margin-bottom: 24px;
+  }
+
+  .countdown {
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 12px;
+  }
+  .box {
+    padding: 18px 8px;
+  }
+}
+
+/* mobily */
+@media (max-width: 480px) {
+  body {
+    padding: calc(10vh + 120px) 12px 20px;
+  }
+
+  nav {
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    padding: 6px 8px;
+    border-radius: 12px;
+  }
+  nav a {
+    padding: .35rem .6rem;
+    font-size: .95rem;
+  }
+  .fab {
+    font-size: 18px;
+  }
+
+  .countdown {
+    grid-template-columns: repeat(2, 1fr);  /* 2 × 2 boxy */
+    gap: 10px;
+  }
+  .box {
+    padding: 14px 6px;
+    border-radius: 12px;
+  }
+  .box .label {
+    font-size: .7rem;
+    letter-spacing: 1px;
+  }
+
+  .target {
+    margin-top: 24px;
+    font-size: .8rem;
+    text-align: center;
+  }
+
+  .creator {
+    font-size: .75rem;
+    bottom: 6px;
+    right: 6px;
+  }
+}
+
+/* veľmi malé mobily */
+@media (max-width: 360px) {
+  nav a {
+    padding: .3rem .45rem;
+    font-size: .85rem;
+  }
+}
+
+/* nízke obrazovky (mobil na šírku) */
+@media (max-height: 520px) {
+  body {
+    justify-content: flex-start;
+    padding-top: calc(10vh + 80px);
+  }
+}
