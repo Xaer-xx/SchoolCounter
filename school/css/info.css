@@ -1,0 +1,151 @@
+/* ===== info.css – štýly pre podstránku INFO ===== */
+
+/* obsah sa nemá orezať hore, preto začíname od vrchu */
+body.info-page {
+  justify-content: flex-start;
+}
+
+#info {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  width: 100%;
+  max-width: 900px;
+  margin-top: 14rem;      /* miesto pre fixný nadpis a nav */
+  margin-bottom: 3rem;
+}
+
+.card {
+  position: relative;
+  overflow: hidden;
+  padding: 26px 22px;
+  text-align: center;
+  background: rgba(255, 255, 255, .08);
+  border: 1px solid rgba(255, 255, 255, .15);
+  border-radius: 16px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
+  animation: boxIn .7s cubic-bezier(.2, .8, .2, 1) backwards;
+  transition: transform .25s cubic-bezier(.2, .8, .2, 1),
+              background-color .25s ease,
+              border-color .25s ease,
+              box-shadow .25s ease;
+}
+
+.card:nth-child(1) { animation-delay: .25s; }
+.card:nth-child(2) { animation-delay: .40s; }
+.card:nth-child(3) { animation-delay: .55s; }
+.card:nth-child(4) { animation-delay: .70s; }
+
+.card:hover {
+  transform: translateY(-4px);
+  background-color: rgba(255, 255, 255, .13);
+  border-color: rgba(255, 216, 107, .5);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, .35), 0 0 22px rgba(255, 216, 107, .25);
+}
+
+.card-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: #ffd86b;
+  background: rgba(255, 216, 107, .12);
+  border-radius: 50%;
+  animation: iconPulse 3.5s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 216, 107, .35); }
+  50%      { box-shadow: 0 0 0 12px rgba(255, 216, 107, 0); }
+}
+
+.card h2 {
+  margin-bottom: 10px;
+  font-size: 1.6rem;
+  color: #ffd86b;
+  font-weight: 400;
+}
+
+.card p {
+  line-height: 1.6;
+  opacity: .9;
+  font-size: 1rem;
+}
+
+.link-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.link-list a,
+.socials a {
+  display: block;
+  padding: .55rem 1rem;
+  color: rgba(255, 255, 255, .9);
+  text-decoration: none;
+  background: rgba(255, 255, 255, .06);
+  border-radius: 12px;
+  transition: transform .25s ease, background-color .25s ease, color .25s ease;
+}
+
+.link-list a:hover,
+.link-list a:focus-visible,
+.socials a:hover,
+.socials a:focus-visible {
+  transform: translateX(4px);
+  color: #ffd86b;
+  background: rgba(255, 255, 255, .14);
+  outline: none;
+}
+
+.socials {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+/* ===== Responzívny dizajn ===== */
+
+@media (max-width: 1024px) {
+  #info { max-width: 700px; margin-top: 13rem; }
+}
+
+@media (max-width: 768px) {
+  #info { margin-top: 15rem; gap: 12px; }
+  .card { padding: 22px 16px; }
+  .card h2 { font-size: 1.4rem; }
+}
+
+@media (max-width: 480px) {
+  #info {
+    margin-top: 17rem;
+    gap: 10px;
+    grid-template-columns: 1fr;
+  }
+  .card h2 { font-size: 1.25rem; }
+  .card p { font-size: .95rem; }
+  .card-icon { width: 46px; height: 46px; font-size: 1.2rem; }
+}
+
+/* nízke obrazovky (mobil na šírku) */
+@media (max-height: 520px) {
+  #info { margin-top: 1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card-icon { animation: none !important; }
+  .card,
+  .link-list a,
+  .socials a { transition: none; }
+}

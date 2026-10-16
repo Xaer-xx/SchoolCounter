@@ -308,3 +308,205 @@ nav #git:focus-visible { color: #b392f0; }
     padding-top: calc(10vh + 80px);
   }
 }
+/* ===== countdown-animations.css – pridaj až PO style.css ===== */
+/* Fialová téma s odpočtom. Nav sa tu nemení ani neanimuje. */
+
+/* ---------- Živé pozadie ---------- */
+body {
+  background-size: 250% 250%;
+  animation: cdBgShift 16s ease-in-out infinite;
+}
+
+@keyframes cdBgShift {
+  0%   { background-position: 0% 0%; }
+  50%  { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
+/* plávajúce žiariace škvrny (za obsahom, neblokujú klikanie) */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  z-index: 0;
+  width: 50vmax;
+  height: 50vmax;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: .35;
+  pointer-events: none;
+}
+
+body::before {
+  top: -18vmax;
+  right: -15vmax;
+  background: radial-gradient(circle, #d946ef 0%, transparent 65%);
+  animation: cdBlobA 20s ease-in-out infinite alternate;
+}
+
+body::after {
+  bottom: -20vmax;
+  left: -16vmax;
+  background: radial-gradient(circle, #ffd86b 0%, transparent 65%);
+  opacity: .18;
+  animation: cdBlobB 25s ease-in-out infinite alternate;
+}
+
+@keyframes cdBlobA {
+  to { transform: translate(-24vmax, 20vmax) scale(1.2); }
+}
+
+@keyframes cdBlobB {
+  to { transform: translate(24vmax, -18vmax) scale(1.15); }
+}
+
+/* ---------- Nadpis a podnadpis ---------- */
+h1 {
+  animation:
+    cdTitleIn 1s cubic-bezier(.2, .8, .2, 1) both,
+    cdTitleGlow 4s ease-in-out 1s infinite;
+}
+
+@keyframes cdTitleIn {
+  from { opacity: 0; transform: translateY(-28px) scale(.92); filter: blur(8px); }
+  to   { opacity: 1; transform: none; filter: blur(0); }
+}
+
+@keyframes cdTitleGlow {
+  0%, 100% { text-shadow: 0 0 10px rgba(217, 70, 239, .2); }
+  50%      { text-shadow: 0 0 26px rgba(217, 70, 239, .7), 0 0 48px rgba(255, 216, 107, .35); }
+}
+
+.subtitle {
+  animation: cdFadeUp .8s cubic-bezier(.2, .8, .2, 1) .3s backwards;
+}
+
+@keyframes cdFadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: .75; transform: none; }
+}
+
+/* ---------- Boxy odpočtu ---------- */
+.box {
+  animation:
+    cdBoxIn .8s cubic-bezier(.2, .8, .2, 1) backwards,
+    cdFloat 6s ease-in-out 1.6s infinite;
+  transition: transform .25s cubic-bezier(.2, .8, .2, 1),
+              border-color .25s ease,
+              box-shadow .25s ease,
+              background-color .25s ease;
+}
+
+/* postupné objavovanie */
+.box:nth-child(1) { animation-delay: .45s, 1.6s; }
+.box:nth-child(2) { animation-delay: .60s, 2.2s; }
+.box:nth-child(3) { animation-delay: .75s, 2.8s; }
+.box:nth-child(4) { animation-delay: .90s, 3.4s; }
+.box:nth-child(5) { animation-delay: 1.05s, 4.0s; }
+
+@keyframes cdBoxIn {
+  from { opacity: 0; transform: perspective(600px) rotateX(-35deg) translateY(30px) scale(.9); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* vznášanie cez "translate", aby nekolidovalo s hover transformom */
+@keyframes cdFloat {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: 0 -6px; }
+}
+
+.box:hover {
+  transform: translateY(-4px) scale(1.03);
+  background-color: rgba(255, 255, 255, .13);
+  border-color: rgba(255, 216, 107, .55);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, .35), 0 0 24px rgba(217, 70, 239, .35);
+}
+
+/* číslice sa trblietajú */
+.box .value {
+  background: linear-gradient(90deg, #ffd86b 0%, #fff6d6 50%, #ffd86b 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: cdShimmer 4s linear infinite;
+}
+
+@keyframes cdShimmer {
+  to { background-position: -200% 0; }
+}
+
+/* posledný box (sekundy) tlčie ako tep každú sekundu */
+.countdown .box:last-child .value {
+  display: inline-block;
+  animation:
+    cdShimmer 4s linear infinite,
+    cdBeat 1s ease-in-out infinite;
+}
+
+@keyframes cdBeat {
+  0%, 100% { scale: 1; }
+  50%      { scale: 1.08; }
+}
+
+/* ---------- Správa a cieľový dátum ---------- */
+.message,
+.target {
+  animation: cdFadeUp .8s cubic-bezier(.2, .8, .2, 1) 1.3s backwards;
+}
+
+.message {
+  animation-name: cdFadeUpFull;
+}
+
+@keyframes cdFadeUpFull {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- Pätička ---------- */
+.creator {
+  transition: color .3s ease, transform .3s ease;
+}
+.creator:hover {
+  color: rgba(255, 255, 255, .7);
+  transform: translateY(-2px);
+}
+
+/* ---------- Mobily: ľahšie efekty ---------- */
+@media (max-width: 768px) {
+  body::before,
+  body::after {
+    filter: blur(55px);
+  }
+  body::before { opacity: .28; }
+}
+
+@media (max-width: 480px) {
+  @keyframes cdFloat {
+    0%, 100% { translate: 0 0; }
+    50%      { translate: 0 -3px; }
+  }
+}
+
+/* ---------- Prístupnosť ---------- */
+@media (prefers-reduced-motion: reduce) {
+  body,
+  body::before,
+  body::after,
+  h1,
+  .subtitle,
+  .box,
+  .box .value,
+  .message,
+  .target {
+    animation: none !important;
+  }
+  .box .value {
+    -webkit-text-fill-color: #ffd86b;
+    color: #ffd86b;
+    background: none;
+  }
+  .box { transition: none; }
+}

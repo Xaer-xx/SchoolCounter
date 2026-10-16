@@ -382,3 +382,185 @@ h1.nav-font{
     margin-top: 1rem;
   }
 }
+/* ===== animations.css – pridaj až PO style.css ===== */
+/* Navigácia (nav) sa tu nemení ani neanimuje. */
+
+/* ---------- Živé pozadie ---------- */
+body {
+  background-size: 300% 300%;
+  animation: bgShift 18s ease-in-out infinite;
+}
+
+@keyframes bgShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* plávajúce farebné "aurora" škvrny (za obsahom, neblokujú klikanie) */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  z-index: 0;
+  width: 55vmax;
+  height: 55vmax;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: .35;
+  pointer-events: none;
+}
+
+body::before {
+  top: -20vmax;
+  left: -15vmax;
+  background: radial-gradient(circle, #7c3aed 0%, transparent 65%);
+  animation: blobA 22s ease-in-out infinite alternate;
+}
+
+body::after {
+  bottom: -22vmax;
+  right: -18vmax;
+  background: radial-gradient(circle, #10b981 0%, transparent 65%);
+  animation: blobB 26s ease-in-out infinite alternate;
+}
+
+@keyframes blobA {
+  to { transform: translate(25vmax, 18vmax) scale(1.2); }
+}
+
+@keyframes blobB {
+  to { transform: translate(-22vmax, -16vmax) scale(1.15); }
+}
+
+/* ---------- Nadpis ---------- */
+h1.nav-font {
+  animation:
+    titleIn 1s cubic-bezier(.2, .8, .2, 1) both,
+    titleGlow 4s ease-in-out 1s infinite;
+}
+
+@keyframes titleIn {
+  from { opacity: 0; transform: translateY(-30px) scale(.92); filter: blur(8px); }
+  to   { opacity: 1; transform: none; filter: blur(0); }
+}
+
+@keyframes titleGlow {
+  0%, 100% { text-shadow: 0 0 10px rgba(255, 216, 107, .15); }
+  50%      { text-shadow: 0 0 28px rgba(255, 216, 107, .65), 0 0 50px rgba(179, 146, 240, .35); }
+}
+
+/* ---------- Boxy s odkazmi ---------- */
+#boxes a {
+  position: relative;
+  overflow: hidden;
+  animation: boxIn .7s cubic-bezier(.2, .8, .2, 1) backwards;
+}
+
+/* postupné objavovanie (stagger) */
+#boxes a:nth-child(1) { animation-delay: .25s; }
+#boxes a:nth-child(2) { animation-delay: .40s; }
+#boxes a:nth-child(3) { animation-delay: .55s; }
+#boxes a:nth-child(4) { animation-delay: .70s; }
+#boxes a:nth-child(5) { animation-delay: .85s; }
+
+@keyframes boxIn {
+  from { opacity: 0; transform: translateY(40px) scale(.9); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* jemné vznášanie – cez vlastnosť "translate", aby nekolidovalo s hover transformom */
+#boxes a {
+  animation:
+    boxIn .7s cubic-bezier(.2, .8, .2, 1) backwards,
+    floaty 6s ease-in-out 1.5s infinite;
+}
+#boxes a:nth-child(1) { animation-delay: .25s, 1.5s; }
+#boxes a:nth-child(2) { animation-delay: .40s, 2.1s; }
+#boxes a:nth-child(3) { animation-delay: .55s, 2.7s; }
+#boxes a:nth-child(4) { animation-delay: .70s, 3.3s; }
+#boxes a:nth-child(5) { animation-delay: .85s, 3.9s; }
+
+@keyframes floaty {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: 0 -6px; }
+}
+
+/* lesklý pás, ktorý prejde po boxe pri hoveri */
+#boxes a::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -80%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(105deg, transparent, rgba(255, 255, 255, .28), transparent);
+  transform: skewX(-20deg);
+  pointer-events: none;
+}
+
+#boxes a:hover::before,
+#boxes a:focus-visible::before {
+  animation: shine .8s ease;
+}
+
+@keyframes shine {
+  to { left: 140%; }
+}
+
+#boxes a:hover,
+#boxes a:focus-visible {
+  box-shadow: 0 14px 34px rgba(0, 0, 0, .35), 0 0 22px rgba(255, 216, 107, .3);
+  border-color: rgba(255, 216, 107, .55);
+}
+
+/* ---------- Odpočítavanie (ak ho používaš na ďalších stránkach) ---------- */
+.box {
+  animation: boxIn .7s cubic-bezier(.2, .8, .2, 1) backwards;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.box:nth-child(2) { animation-delay: .1s; }
+.box:nth-child(3) { animation-delay: .2s; }
+.box:nth-child(4) { animation-delay: .3s; }
+.box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, .35);
+}
+
+/* ---------- Pätička ---------- */
+.creator {
+  transition: color .3s ease, transform .3s ease;
+}
+.creator:hover {
+  color: rgba(255, 255, 255, .7);
+  transform: translateY(-2px);
+}
+
+/* ---------- Mobily: ľahšie efekty ---------- */
+@media (max-width: 768px) {
+  body::before,
+  body::after {
+    filter: blur(50px);
+    opacity: .28;
+  }
+}
+
+@media (max-width: 480px) {
+  @keyframes floaty {
+    0%, 100% { translate: 0 0; }
+    50%      { translate: 0 -3px; }
+  }
+}
+
+/* ---------- Prístupnosť: bez animácií, ak si ich používateľ vypol ---------- */
+@media (prefers-reduced-motion: reduce) {
+  body,
+  body::before,
+  body::after,
+  h1.nav-font,
+  #boxes a,
+  .box {
+    animation: none !important;
+  }
+  #boxes a::before { display: none; }
+}
