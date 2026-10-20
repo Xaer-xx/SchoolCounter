@@ -1,0 +1,515 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: #fff;
+  background: linear-gradient(160deg, #bc4d15 0%, #ca661b 20%, #cfbf10 100%);
+  overflow-x: hidden;
+}
+
+h1 {
+  font-size: clamp(1.6rem, 5vw, 3rem);
+  text-align: center;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  opacity: .75;
+  margin-bottom: 36px;
+  text-align: center;
+  font-size: clamp(.9rem, 2.5vw, 1.1rem);
+}
+
+.countdown {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 16px;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.box {
+  background: rgba(255, 255, 255, .08);
+  border: 1px solid rgba(255, 255, 255, .15);
+  border-radius: 16px;
+  padding: 22px 10px;
+  text-align: center;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
+}
+
+.box .value {
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #ffd86b;
+  line-height: 1.1;
+}
+
+.box .label {
+  margin-top: 8px;
+  font-size: .85rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: .8;
+}
+
+/* padajúci sneh – fixný, neblokuje klikanie */
+.snow {
+  position: fixed;
+  top: -10px;
+  color: #fff;
+  pointer-events: none;
+  user-select: none;
+  animation: fall linear forwards;
+  z-index: 0;
+}
+
+@keyframes fall {
+  to { transform: translateY(105vh) translateX(40px); }
+}
+
+h1, .subtitle, .countdown, .message, .target {
+  position: relative;
+  z-index: 1;
+}
+
+nav {
+  all: unset;
+  box-sizing: border-box;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  z-index: 1000;
+
+  min-height: 10vh;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  overflow: hidden;              /* nič nevyčnieva z rámu */
+  text-align: center;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: #fff;
+
+  background: rgba(255, 255, 255, .08);
+  border: 1px solid rgba(255, 255, 255, .15);
+  border-radius: 16px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
+}
+
+nav a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: .6rem 1.2rem;
+  border-radius: 12px;
+  text-decoration: none;
+  color: rgba(255, 255, 255, .85);
+  font-size: clamp(1rem, 2.5vw, 1.6rem);
+  background-color: transparent;
+  transition: transform .25s cubic-bezier(.2, .8, .2, 1),
+              color .25s ease,
+              background-color .25s ease;
+}
+
+/* podčiarknutie, ktoré sa rozbehne zo stredu */
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  width: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transform: translateX(-50%);
+  transition: width .3s cubic-bezier(.2, .8, .2, 1);
+}
+
+/* Instagram a Facebook bez podčiarknutia */
+nav #ins::after,
+nav #face::after {
+  display: none;
+}
+
+/* hover: jemný zdvih, odkaz ostáva v ráme */
+nav a:hover,
+nav a:focus-visible {
+  color: #fff;
+  background-color: rgba(255, 255, 255, .1);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+nav a:hover::after,
+nav a:focus-visible::after {
+  width: 55%;
+}
+
+/* klik */
+nav a:active {
+  transform: translateY(0) scale(.97);
+  transition-duration: .1s;
+}
+
+/* prístupnosť: bez animácií pre používateľov, ktorí si to vypli */
+@media (prefers-reduced-motion: reduce) {
+  nav a,
+  nav a::after { transition: none; }
+  nav a:hover,
+  nav a:focus-visible { transform: none; }
+}
+
+.nav-font {
+  font-family: "Jaro", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* farby sociálnych sietí */
+nav #ins:hover,
+nav #ins:focus-visible { color: rgb(218, 91, 155); }
+
+nav #git:hover,
+nav #git:focus-visible { color: #b392f0; }
+
+.fab {
+  font-size: 24px;
+  font-weight: 100;
+}
+nav #git:hover,
+nav #git:focus-visible { color: #b392f0; }
+
+.creator {
+  position: fixed;   /* alebo position: absolute, ak je rodič relatívny #b392f0 */
+  bottom: 0;
+  right: 0;
+  bottom: 10px; 
+  right: 10px;
+  color: rgba(255, 255, 255, .2);
+  text-decoration: none;
+}
+
+/* ===== Responzívny dizajn ===== */
+
+/* tablety na šírku / menšie notebooky */
+@media (max-width: 1024px) {
+  .countdown {
+    max-width: 800px;
+  }
+}
+
+/* tablety na výšku */
+@media (max-width: 768px) {
+  body {
+    padding: calc(10vh + 90px) 14px 24px; /* menu sa zalamuje, je vyššie */
+  }
+
+  nav {
+    gap: 4px;
+    padding: 8px 10px;
+  }
+  nav a {
+    padding: .4rem .8rem;
+    font-size: 1.1rem;
+  }
+  .fab {
+    font-size: 20px;
+  }
+
+  .subtitle {
+    margin-bottom: 24px;
+  }
+
+  .countdown {
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 12px;
+  }
+  .box {
+    padding: 18px 8px;
+  }
+}
+
+/* mobily */
+@media (max-width: 480px) {
+  body {
+    padding: calc(10vh + 120px) 12px 20px;
+  }
+
+  nav {
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    padding: 6px 8px;
+    border-radius: 12px;
+  }
+  nav a {
+    padding: .35rem .6rem;
+    font-size: .95rem;
+  }
+  .fab {
+    font-size: 18px;
+  }
+
+  .countdown {
+    grid-template-columns: repeat(2, 1fr);  /* 2 × 2 boxy */
+    gap: 10px;
+  }
+  .box {
+    padding: 14px 6px;
+    border-radius: 12px;
+  }
+  .box .label {
+    font-size: .7rem;
+    letter-spacing: 1px;
+  }
+
+  .target {
+    margin-top: 24px;
+    font-size: .8rem;
+    text-align: center;
+  }
+
+  .creator {
+    font-size: .75rem;
+    bottom: 6px;
+    right: 6px;
+  }
+}
+
+/* veľmi malé mobily */
+@media (max-width: 360px) {
+  nav a {
+    padding: .3rem .45rem;
+    font-size: .85rem;
+  }
+}
+
+/* nízke obrazovky (mobil na šírku) */
+@media (max-height: 520px) {
+  body {
+    justify-content: flex-start;
+    padding-top: calc(10vh + 80px);
+  }
+}
+
+/* ===== summer-animations.css – pridaj až PO style.css ===== */
+/* Oranžovo-žltá letná téma. Nav sa tu nemení ani neanimuje. */
+
+/* ---------- Živé pozadie ---------- */
+body {
+  background-size: 250% 250%;
+  animation: smBgShift 16s ease-in-out infinite;
+}
+
+@keyframes smBgShift {
+  0%   { background-position: 0% 0%; }
+  50%  { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
+/* slnko: pulzujúca žiara + pomaly rotujúce lúče (za obsahom, neblokujú klikanie) */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+body::before {
+  top: -22vmax;
+  right: -22vmax;
+  width: 60vmax;
+  height: 60vmax;
+  background: radial-gradient(circle, rgba(255, 244, 170, .75) 0%, rgba(255, 200, 60, .3) 35%, transparent 65%);
+  filter: blur(30px);
+  animation: smSunPulse 6s ease-in-out infinite;
+}
+
+body::after {
+  top: -30vmax;
+  right: -30vmax;
+  width: 76vmax;
+  height: 76vmax;
+  background: repeating-conic-gradient(
+    from 0deg,
+    rgba(255, 255, 255, .13) 0deg 8deg,
+    transparent 8deg 24deg
+  );
+  -webkit-mask-image: radial-gradient(circle, #000 0%, transparent 62%);
+  mask-image: radial-gradient(circle, #000 0%, transparent 62%);
+  animation: smRays 60s linear infinite;
+}
+
+@keyframes smSunPulse {
+  0%, 100% { transform: scale(1);    opacity: .8; }
+  50%      { transform: scale(1.12); opacity: 1; }
+}
+
+@keyframes smRays {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- Nadpis a podnadpis ---------- */
+h1 {
+  animation:
+    smTitleIn 1s cubic-bezier(.2, .8, .2, 1) both,
+    smTitleGlow 4s ease-in-out 1s infinite;
+}
+
+@keyframes smTitleIn {
+  from { opacity: 0; transform: translateY(-28px) scale(.92); filter: blur(8px); }
+  to   { opacity: 1; transform: none; filter: blur(0); }
+}
+
+@keyframes smTitleGlow {
+  0%, 100% { text-shadow: 0 2px 10px rgba(120, 40, 0, .25); }
+  50%      { text-shadow: 0 2px 10px rgba(120, 40, 0, .3), 0 0 30px rgba(255, 244, 170, .8); }
+}
+
+.subtitle {
+  animation: smFadeUp .8s cubic-bezier(.2, .8, .2, 1) .3s backwards;
+}
+
+@keyframes smFadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: .75; transform: none; }
+}
+
+/* ---------- Boxy odpočtu ---------- */
+.box {
+  animation:
+    smBoxIn .8s cubic-bezier(.2, .8, .2, 1) backwards,
+    smFloat 6s ease-in-out 1.6s infinite;
+  transition: transform .25s cubic-bezier(.2, .8, .2, 1),
+              border-color .25s ease,
+              box-shadow .25s ease,
+              background-color .25s ease;
+}
+
+/* postupné objavovanie */
+.box:nth-child(1) { animation-delay: .45s, 1.6s; }
+.box:nth-child(2) { animation-delay: .60s, 2.2s; }
+.box:nth-child(3) { animation-delay: .75s, 2.8s; }
+.box:nth-child(4) { animation-delay: .90s, 3.4s; }
+.box:nth-child(5) { animation-delay: 1.05s, 4.0s; }
+
+@keyframes smBoxIn {
+  from { opacity: 0; transform: perspective(600px) rotateX(-35deg) translateY(30px) scale(.9); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* vznášanie cez "translate", aby nekolidovalo s hover transformom */
+@keyframes smFloat {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: 0 -6px; }
+}
+
+.box:hover {
+  transform: translateY(-4px) scale(1.03);
+  background-color: rgba(255, 255, 255, .16);
+  border-color: rgba(255, 255, 255, .6);
+  box-shadow: 0 14px 34px rgba(120, 40, 0, .35), 0 0 26px rgba(255, 244, 170, .5);
+}
+
+/* číslice sa trblietajú (tieň cez drop-shadow, aby boli čitateľné na žltom pozadí) */
+.box .value {
+  background: linear-gradient(90deg, #ffd86b 0%, #ffffff 50%, #ffd86b 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 2px 6px rgba(120, 40, 0, .45));
+  animation: smShimmer 4s linear infinite;
+}
+
+@keyframes smShimmer {
+  to { background-position: -200% 0; }
+}
+
+/* posledný box (sekundy) tlčie ako tep každú sekundu */
+.countdown .box:last-child .value {
+  display: inline-block;
+  animation:
+    smShimmer 4s linear infinite,
+    smBeat 1s ease-in-out infinite;
+}
+
+@keyframes smBeat {
+  0%, 100% { scale: 1; }
+  50%      { scale: 1.08; }
+}
+
+/* ---------- Správa a cieľový dátum ---------- */
+.message,
+.target {
+  animation: smFadeUpFull .8s cubic-bezier(.2, .8, .2, 1) 1.3s backwards;
+}
+
+@keyframes smFadeUpFull {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- Pätička ---------- */
+.creator {
+  transition: color .3s ease, transform .3s ease;
+}
+.creator:hover {
+  color: rgba(255, 255, 255, .8);
+  transform: translateY(-2px);
+}
+
+/* ---------- Mobily: ľahšie efekty ---------- */
+@media (max-width: 768px) {
+  body::before { filter: blur(20px); }
+  body::after  { animation-duration: 90s; }
+}
+
+@media (max-width: 480px) {
+  @keyframes smFloat {
+    0%, 100% { translate: 0 0; }
+    50%      { translate: 0 -3px; }
+  }
+}
+
+/* ---------- Prístupnosť ---------- */
+@media (prefers-reduced-motion: reduce) {
+  body,
+  body::before,
+  body::after,
+  h1,
+  .subtitle,
+  .box,
+  .box .value,
+  .message,
+  .target {
+    animation: none !important;
+  }
+  .box .value {
+    -webkit-text-fill-color: #ffd86b;
+    color: #ffd86b;
+    background: none;
+  }
+  .box { transition: none; }
+}
