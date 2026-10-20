@@ -1,0 +1,4 @@
+mojserver.duckdns.org {
+    root * C:/Users/Dell/Desktop/school
+    file_server
+}
